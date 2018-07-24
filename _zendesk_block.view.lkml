@@ -830,7 +830,7 @@ view: ticket_history_facts {
   derived_table: {
     sql: SELECT
           tfh.ticket_id
-          ,IFNULL(tc.created, MAX(case when field_name = 'status' and value = 'solved' then updated else null end)) as first_response
+          ,case when tc.created is null then (MAX(case when field_name = 'status' and value = 'solved' then updated else null end)) end as first_response
           ,MAX(case when field_name = 'status' then updated else null end) AS last_updated_status
           ,MAX(case when field_name = 'assignee_id' then updated else null end) AS last_updated_by_assignee
           ,MAX(case when field_name = 'requester_id' then updated else null end) AS last_updated_by_requester
