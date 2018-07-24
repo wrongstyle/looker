@@ -297,7 +297,6 @@ view: ticket {
     value_format_name: decimal_0
   }
 
-
   # ----- measures ------
   measure: count {
     group_label: "Counts"
@@ -544,7 +543,7 @@ view: satisfaction_rating {
   }
 
   dimension: score {
-    type: number
+    type: string
     sql: ${TABLE}.score ;;
   }
 
@@ -868,6 +867,23 @@ view: brand {
   }
 }
 
+view: satisfaction {
+  view_label: "Satisfaction"
+  derived_table: {
+    sql: SELECT
+        satisfaction_rating.assignee_id  AS "satisfaction_rating.assignee_id"
+        ,(SUM(case when satisfaction_rating.score = 'good' then 1.0 else 0.0 end)/COUNT(satisfaction_rating.id ))*100 as satisfaction
+        FROM zendesk.ticket AS ticket
+        LEFT JOIN zendesk.satisfaction_rating  AS satisfaction_rating ON ticket.id = satisfaction_rating.ticket_id
+        WHERE satisfaction_rating.score  IN ('good', 'bad')
+        GROUP BY 1 ;;
+  }
+  dimension: satisfaction {
+    type: number
+    sql: ${TABLE}.satisfactino ;;
+  }
+}
+
 view: ticket_history_facts {
   view_label: "Ticket"
   derived_table: {
@@ -883,7 +899,6 @@ view: ticket_history_facts {
           ,SUM(case when field_name = 'assignee_id' then 1 else 0 end) as number_of_assignee_changes
           ,count(distinct case when field_name = 'assignee_id' then value else null end) as number_of_distinct_assignees
           ,count(distinct case when field_name = 'group_id' then value else null end) as number_of_distinct_groups
-
       FROM zendesk.ticket_field_history as tfh
       LEFT JOIN (
           SELECT ticket_id, created, row_number() over (partition by ticket_id order by created asc) as comment_sequence
