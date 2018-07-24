@@ -878,9 +878,10 @@ view: satisfaction {
         WHERE satisfaction_rating.score  IN ('good', 'bad')
         GROUP BY 1 ;;
   }
-  dimension: satisfaction {
-    type: number
-    sql: ${TABLE}.satisfactino ;;
+  measure: satisfaction {
+    type: percent_of_total
+    group_label: "% Satisfaction"
+    sql: ${TABLE}.satisfaction ;;
   }
 }
 
