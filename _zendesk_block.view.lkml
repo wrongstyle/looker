@@ -526,6 +526,63 @@ view: requester {
 
 }
 
+view: satisfaction_rating {
+  view_label: "Satisfaction Rating"
+
+  dimension: id {
+    primary_key:  yes
+    type:  number
+    sql:  ${TABLE} id ;;
+    hidden:  no
+  }
+
+  dimension: ticket_id {
+    primary_key:  no
+    type:  number
+    sql:  ${TABLE}.ticket_id ;;
+    hidden:  yes
+  }
+
+  dimension: score {
+    type: string
+    sql: ${TABLE}.score ;;
+    hidden:  no
+  }
+
+  dimension: comment {
+    type: string
+    sql: ${TABLE}.comment ;;
+    hidden:  no
+  }
+
+  dimension: reason {
+    type: string
+    sql: ${TABLE}.reason ;;
+    hidden:  no
+  }
+
+  dimension: assignee_id {
+    type: number
+    sql: ${TABLE}.assignee_id ;;
+    hidden:  no
+  }
+
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.created ;;
+  }
+}
+
+
 view: ticket_comment {
   view_label: "Ticket Comments"
 
