@@ -528,6 +528,7 @@ view: requester {
 
 view: satisfaction_rating {
   view_label: "Satisfaction Rating"
+  sql_table_name: zendesk.satisfaction_rating ;;
 
   dimension: id {
     primary_key:  yes
@@ -537,7 +538,6 @@ view: satisfaction_rating {
   }
 
   dimension: ticket_id {
-    primary_key:  no
     type:  number
     sql:  ${TABLE}.ticket_id ;;
     hidden:  yes
@@ -546,25 +546,11 @@ view: satisfaction_rating {
   dimension: score {
     type: string
     sql: ${TABLE}.score ;;
-    hidden:  no
-  }
-
-  dimension: comment {
-    type: string
-    sql: ${TABLE}.comment ;;
-    hidden:  no
-  }
-
-  dimension: reason {
-    type: string
-    sql: ${TABLE}.reason ;;
-    hidden:  no
   }
 
   dimension: assignee_id {
     type: number
     sql: ${TABLE}.assignee_id ;;
-    hidden:  no
   }
 
   dimension_group: created {
