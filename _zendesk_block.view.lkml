@@ -545,7 +545,7 @@ view: satisfaction_rating {
 
   dimension: score {
     type: number
-    sql: case when ${TABLE}.score = 'good' then 1 when ${TABLE}.score = 'bad' then -1 else 0 end ;;
+    sql: ${TABLE}.score ;;
   }
 
   dimension: assignee_id {
