@@ -186,7 +186,8 @@ view: ticket {
 
   dimension: minutes_to_first_response {
     type: number
-    sql: 1.00 * DATETIME_DIFF(EXTRACT(DATETIME FROM ${ticket_history_facts.first_response_raw}), EXTRACT(DATETIME FROM ${created_raw}), MINUTE) ;;
+    #sql: 1.00 * DATETIME_DIFF(EXTRACT(DATETIME FROM ${ticket_history_facts.first_response_raw}), EXTRACT(DATETIME FROM ${created_raw}), MINUTE) ;;
+    sql: 1.00 * EXTRACT(EPOCH FROM (${ticket_history_facts.first_response_raw} - ${created_raw}))/60 ;;
   }
 
   dimension: hours_to_solve {
@@ -949,7 +950,7 @@ view: ticket_history_facts {
           SELECT ticket_id, created, row_number() over (partition by ticket_id order by created asc) as comment_sequence
           FROM zendesk.ticket_comment
       ) tc on tc.ticket_id = tfh.ticket_id and tc.comment_sequence = 2
-      GROUP BY ticket_id, tc.created ;;
+      GROUP BY tfh.ticket_id, tc.created ;;
   }
 
   dimension_group: first_response {
