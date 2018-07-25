@@ -871,18 +871,62 @@ view: satisfaction {
   view_label: "Satisfaction"
   derived_table: {
     sql: SELECT
-        satisfaction_rating.assignee_id  AS "satisfaction_rating.assignee_id"
-        ,(SUM(case when satisfaction_rating.score = 'good' then 1.0 else 0.0 end)/COUNT(satisfaction_rating.id ))*100 as satisfaction
-        FROM zendesk.ticket AS ticket
-        LEFT JOIN zendesk.satisfaction_rating  AS satisfaction_rating ON ticket.id = satisfaction_rating.ticket_id
-        WHERE satisfaction_rating.score  IN ('good', 'bad')
-        GROUP BY 1 ;;
+        users.id as assignee_id
+        , users.name as assignee_name
+        , satisfaction_rating.created_at as created
+        , (SUM(case when satisfaction_rating.score = 'good' then 1.0 else 0.0 end)/COUNT(satisfaction_rating.id))*100 as percent_satisfaction
+        , SUM(case when satisfaction_rating.score = 'good' then 1.0 else 0.0 end) as sum_good
+        , COUNT(satisfaction_rating.id) as total_ratings
+        FROM zendesk.satisfaction_rating satisfaction_rating
+        LEFT JOIN zendesk.user users on users.id = satisfaction_rating.assignee_id
+        WHERE satisfaction_rating.score IN ('good', 'bad')
+        GROUP BY 3,1,2 ;;
   }
-  measure: satisfaction {
-    type: percent_of_total
-    group_label: "% Satisfaction"
-    sql: ${TABLE}.satisfaction ;;
+
+  dimension: assignee_id {
+    label: "Assignee ID"
+    type: number
+    sql:  ${TABLE}.assignee_id ;;
   }
+
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.created ;;
+  }
+
+  dimension: assignee_name {
+    label: "Assignee Name"
+    type: string
+    sql:  ${TABLE}.assignee_name ;;
+  }
+
+  dimension: percent_satisfaction {
+    label: "% Satisfaction"
+    type: number
+    value_format_name: decimal_0
+    sql:  ${TABLE}.percent_satisfaction ;;
+  }
+
+  measure: total_ratings {
+    group_label: "Count"
+    type: count
+  }
+
+  measure: sum_good {
+    group_label: "Good ratings"
+    type: sum
+    sql: ${TABLE}.sum_good ;;
+  }
+
 }
 
 view: ticket_history_facts {

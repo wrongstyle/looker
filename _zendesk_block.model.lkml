@@ -3,7 +3,9 @@ connection: "postgres_prod"
 include: "*_zendesk_block.view"
 include: "*_zendesk_variables.view"
 # include: "*.dashboard"
+explore: satisfaction {
 
+}
 explore: ticket {
   join: assignee {
     sql_on: ${ticket.assignee_id} = ${assignee.id} ;;
