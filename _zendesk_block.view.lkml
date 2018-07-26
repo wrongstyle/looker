@@ -1,5 +1,44 @@
 include: "_zendesk_variables.view"
 
+view: ticket_tag_history {
+  sql_table_name: zendesk.ticket_tag_history ;;
+
+  # ----- database fields -----
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.id ;;
+  }
+  dimension: user_id {
+    type: number
+    sql: ${TABLE}.user_id ;;
+  }
+  dimension: tag {
+    type: string
+    sql: ${TABLE}.tag ;;
+  }
+
+  # ----- date attributes ------
+  dimension_group: updated {
+    type: time
+    timeframes: [
+      raw,
+      day_of_week,
+      hour_of_day,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.updated ;;
+  }
+
+  measure: count {
+    type: count
+  }
+}
 view: ticket {
   extends: [_variables]
   sql_table_name: zendesk.ticket ;;
