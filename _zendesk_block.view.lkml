@@ -155,6 +155,24 @@ view: ticket {
     sql: ${TABLE}.via_source_rel ;;
   }
 
+  dimension: custom_playlist_assigned_ {
+    type: number
+    sql: ${TABLE}.custom_playlist_assigned_ ;;
+    value_format: "0"
+  }
+
+  dimension: custom_playlist_assigned_by {
+    type: number
+    sql: ${TABLE}.custom_playlist_assigned_at ;;
+    value_format: "0"
+  }
+
+  dimension: custom_playlist_assigned_at {
+    type: number
+    sql: ${TABLE}.custom_playlist_assigned_by ;;
+    value_format: "0"
+  }
+
   # ----- date attributes ------
   dimension_group: created {
     type: time
