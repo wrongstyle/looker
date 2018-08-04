@@ -163,13 +163,13 @@ view: ticket {
 
   dimension: custom_playlist_assigned_by {
     type: number
-    sql: ${TABLE}.custom_playlist_assigned_at ;;
+    sql: ${TABLE}.custom_playlist_assigned_by ;;
     value_format: "0"
   }
 
   dimension: custom_playlist_assigned_at {
     type: number
-    sql: ${TABLE}.custom_playlist_assigned_by ;;
+    sql: ${TABLE}.custom_playlist_assigned_at ;;
     value_format: "0"
   }
 
@@ -360,6 +360,12 @@ view: ticket {
     group_label: "Counts"
     type: count
     drill_fields: [detail*]
+  }
+
+  measure: count_playlist_assigned {
+    type: sum
+    sql: ${TABLE}.custom_playlist_assigned_ ;;
+    value_format: "0"
   }
 
   # ----- Sets of fields for drilling ------
